@@ -15,8 +15,11 @@ settings.configure(
 )
 
 
-
+#definition of URLS
 from django.conf.urls import url
+#creation of WSGI application
+from django.core.wsgi import get_wsgi_application
+#http response generation
 from django.http import HttpResponse
 
 def index(request):
@@ -27,6 +30,8 @@ urlpatterns = (
 	url(r'^$', index),
 )
 
+# Create WSGI application - needed to communicate with normal web server
+application = get_wsgi_application()
 
 if __name__=="__main__":
 	from django.core.management import execute_from_command_line
