@@ -35,9 +35,12 @@ def placeholder(request, width, height):
 def index(request):
 	return HttpResponse('Hello World!')
 
-
+#named groups are captured using the ?P syntax and passed as keyword arguments
 urlpatterns = (
-	url(r'^$', index),
+	#incoming requests to the URL /image/30x25/ will be routed to the placeholder
+	#view and pass in those values (e.g., width=30 and height=25 )
+	url(r'^image/(?P<width>[0-9]+)x(?P<height>[0-9]+)/$', placeholder, name='placeholder'),
+	url(r'^$', index, name='homepage'),
 )
 
 # Create WSGI application - needed to communicate with normal web server
