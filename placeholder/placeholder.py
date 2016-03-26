@@ -20,13 +20,17 @@ settings.configure(
 	),
 )
 
-
 #definition of URLS
 from django.conf.urls import url
 #creation of WSGI application
 from django.core.wsgi import get_wsgi_application
 #http response generation
 from django.http import HttpResponse
+
+def placeholder(request, width, height):
+	#TODO: rest of the view will go here
+	return HttpResponse('OK')
+
 
 def index(request):
 	return HttpResponse('Hello World!')
