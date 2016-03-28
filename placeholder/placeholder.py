@@ -29,6 +29,9 @@ from django.core.wsgi import get_wsgi_application
 #http response generation
 from django.http import HttpResponse, HttpResponseBadRequest
 
+# image generation requirements
+from io import BytesIO
+from PIL import Image
 
 class Imageform(forms.Form):
 	"""Form to validate requested placeholder image."""
@@ -36,13 +39,22 @@ class Imageform(forms.Form):
 	height = forms.IntegerField(min_value=1, max_value=2000)
 	width = forms.IntegerField(min_value=1, max_value=2000)
 
+	def generate(self, image_format='PNG'):
+		"""Generate an image of the given type and and return as raw bytes"""
+		height = self.cleaned_data['height']
+		width = self.cleaned_data['width']
+		image = Image.new('RGB', (width, height))
+		content = BytesIO()
+		image.save(content, image_format)
+		content.seek(0)
+		return content
+
+
 def placeholder(request, width, height):
 	form = Imageform({'height':height, 'width':width})
 	if form.is_valid():
-		height = form.cleaned_data['height']
-		width = form.cleaned_data['width']
-		#TODO: generate image of a requested size
-		return HttpResponse('OK')
+		image = form.generate()
+		return HttpResponse(image, content_type='image/png')
 	else:
 		return HttpResponseBadRequest('Invalid Image Request')
 
