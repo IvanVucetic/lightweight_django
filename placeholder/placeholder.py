@@ -24,6 +24,8 @@ settings.configure(
 from django import forms
 #definition of URLS
 from django.conf.urls import url
+# enable caching
+from django.core.cache import cache
 #creation of WSGI application
 from django.core.wsgi import get_wsgi_application
 #http response generation
@@ -43,17 +45,21 @@ class Imageform(forms.Form):
 		"""Generate an image of the given type and and return as raw bytes"""
 		height = self.cleaned_data['height']
 		width = self.cleaned_data['width']
-		image = Image.new('RGB', (width, height))
-		draw = ImageDraw.Draw(image)
-		text = '{} x {}'.format(width, height)
-		textwidth, textheight = draw.textsize(text)
-		if textwidth < width and textheight < height:
-			texttop = (height - textheight) // 2
-			textleft = (width - textwidth) // 2
-			draw.text((textleft, texttop), text, fill=(255, 255, 255))
-		content = BytesIO()
-		image.save(content, image_format)
-		content.seek(0)
+		key = '{}.{}.{}'.format(width, height, image_format)
+		content = cache.get(key)
+		if content is None:
+			image = Image.new('RGB', (width, height))
+			draw = ImageDraw.Draw(image)
+			text = '{} x {}'.format(width, height)
+			textwidth, textheight = draw.textsize(text)
+			if textwidth < width and textheight < height:
+				texttop = (height - textheight) // 2
+				textleft = (width - textwidth) // 2
+				draw.text((textleft, texttop), text, fill=(255, 255, 255))
+			content = BytesIO()
+			image.save(content, image_format)
+			content.seek(0)
+			cache.set(key, content, 60 * 60) #cache time 1hr
 		return content
 
 
