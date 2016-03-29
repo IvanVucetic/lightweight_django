@@ -1,3 +1,4 @@
+import hashlib
 import os
 import sys
 
@@ -30,6 +31,8 @@ from django.core.cache import cache
 from django.core.wsgi import get_wsgi_application
 #http response generation
 from django.http import HttpResponse, HttpResponseBadRequest
+# etag decorator for utilization of browser cache
+from django.views.decorators.http import etag
 
 # image generation requirements
 from io import BytesIO
@@ -62,7 +65,11 @@ class Imageform(forms.Form):
 			cache.set(key, content, 60 * 60) #cache time 1hr
 		return content
 
+def generate_etag(request, width, height):
+	content = 'placeholder: {0} x {1}'.format(width, height)
+	return hashlib.sha1(content.encode('utf-8')).hexdigest()
 
+@etag(generate_etag)
 def placeholder(request, width, height):
 	form = Imageform({'height':height, 'width':width})
 	if form.is_valid():
