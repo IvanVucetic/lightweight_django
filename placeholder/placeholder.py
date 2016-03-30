@@ -4,7 +4,7 @@ import sys
 
 # image generation requirements
 from io import BytesIO
-from PIL import Image. ImageDraw
+from PIL import Image, ImageDraw
 
 from django.conf import settings
 
