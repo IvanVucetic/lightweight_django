@@ -37,10 +37,14 @@ from django import forms
 from django.conf.urls import url
 # enable caching
 from django.core.cache import cache
+#build url by reversing a view
+from django.core.urlresolvers import reverse
 #creation of WSGI application
 from django.core.wsgi import get_wsgi_application
 #http response generation
 from django.http import HttpResponse, HttpResponseBadRequest
+#rendering the template
+from django.shortcuts import render
 # etag decorator for utilization of browser cache
 from django.views.decorators.http import etag
 
@@ -90,7 +94,11 @@ def placeholder(request, width, height):
 
 
 def index(request):
-	return HttpResponse('Hello World!')
+	example = reverse('placeholder', kwargs={'width':50, 'height':50})
+	context = {
+		'example': request.build_absolute_uri(example)
+	}
+	return render(request, 'home.html', context)
 
 #named groups are captured using the ?P syntax and passed as keyword arguments
 urlpatterns = (
