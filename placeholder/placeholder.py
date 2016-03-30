@@ -2,17 +2,24 @@ import hashlib
 import os
 import sys
 
+# image generation requirements
+from io import BytesIO
+from PIL import Image. ImageDraw
+
 from django.conf import settings
 
 DEBUG = os.environ.get('DEBUG','on') == 'on'
 
 SECRET_KEY = os.environ.get('SECRET_KEY', '^8vc1a3t3umr+gpghe#srsvwlt&=#q7z=u%f-!=^!fzz3bw7@i')
 
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost').split(',')
+
 BASE_DIR = os.path.dirname(__file__)
 
 settings.configure(
 	DEBUG=DEBUG,
 	SECRET_KEY=SECRET_KEY, #in production should actually be random
+	ALLOWED_HOSTS=ALLOWED_HOSTS,
 	ROOT_URLCONF=__name__,
 	MIDDLEWARE_CLASSES=(
 	'django.middleware.common.CommonMiddleware',
@@ -47,10 +54,6 @@ from django.http import HttpResponse, HttpResponseBadRequest
 from django.shortcuts import render
 # etag decorator for utilization of browser cache
 from django.views.decorators.http import etag
-
-# image generation requirements
-from io import BytesIO
-from PIL import Image. ImageDraw
 
 class Imageform(forms.Form):
 	"""Form to validate requested placeholder image."""
