@@ -5,6 +5,8 @@ from django.conf import settings
 
 SECRET_KEY = os.environ.get('SECRET_KEY', 'b=s36a+rw@)r7vwbn8(qs90-2spyksh$m8g286$!tw01%bwrde')
 
+BASE_DIR = os.path.dirname(__file__)
+
 settings.configure(
 	DEBUG=True,
 	SECRET_KEY=SECRET_KEY, #in production should actually be random
@@ -16,6 +18,7 @@ settings.configure(
 		'sitebuilder',
 	),
 	STATIC_URL='/static/',
+	SITE_PAGES_DIRECTORY = ps.path.join(BASE_DIR, 'pages'),
 )
 
 
