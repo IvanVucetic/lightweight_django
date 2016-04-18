@@ -53,7 +53,7 @@ WSGI_APPLICATION = 'scrum.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/1.7/ref/settings/#databases
-
+#proveriti da li ovo radi; iz postgres-->psql# kreirao db scrum i usera vuceta
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
