@@ -1,6 +1,10 @@
 from django.conf.urls import include, url
 
+from rest_framework.authtoken.views import obtain_auth_token
+
+from board.urls import router
+
 urlpatterns = [
     url(r'^api/token/', obtain_auth_token, name='api-token'),
-    # all patternshave been replaced with a single URL for the view for exchanging a username and password combination for an API token
+    url(r'^api/', include(router.urls)),
 ]
