@@ -4,7 +4,7 @@ from .models import Sprint
 from .serializers import SprintSerializer
 
 class SprintViewSet(viewsets.ModelViewSet):
-    """API endpoint for listening and creating sprints"
+    """API endpoint for listening and creating sprints"""
 
     queryset = Sprint.objects.order_by("end")
     serializer_class = SprintSerializer
