@@ -28,14 +28,13 @@ class SprintSerializer(serializers.ModelSerializer):
                 request=request) + '?sprint={}'.format(obj.pk),
         }
 
-    def validate_end(self, attrs, source):
-        end_date = attrs[source]
-        new = not self.object
-        changed = self.object and self.object.end != end_date
-        if (new or changed) and (end_date < date.today()):
-            msg = _('End date cannot be in the past')
+    def validate_end(self, value):
+        new = self.instance is None
+        changed = self.instance and self.instance.end != value
+        if (new or changed) and (value < date.today()):
+            msg = _('End date cannot be in the past.')
             raise serializers.ValidationError(msg)
-        return attrs
+        return value
 
 
 class TaskSerializer(serializers.ModelSerializer):
