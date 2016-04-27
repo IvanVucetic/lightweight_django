@@ -69,21 +69,20 @@ class TaskSerializer(serializers.ModelSerializer):
                 kwargs={User.USERNAME_FIELD: obj.assigned}, required=required)
         return links
 
-    def validate_sprint(self, attrs, source): #don't understand at all
-        sprint = attrs[source]
-        if self.object and self.object.pk:
-            if sprint != self.object.sprint:
-                if self.object.status == Task.STATUS_DONE:
+    def validate_sprint(self, value):
+        if self.instance and self.instance.pk:
+            if value != self.instance.sprint:
+                if self.instance.status == Task.STATUS_DONE:
                     msg = _('Cannot change the sprint of a completed task.')
                     raise serializers.ValidationError(msg)
-                if sprint and sprint.end < date.today():
+                if value and value.end < date.today():
                     msg = _('Cannot assign tasks to past sprints.')
                     raise serializers.ValidationError(msg)
         else:
-            if sprint and sprint.end < date.today():
+            if value and value.end < date.today():
                 msg = _('Cannot add tasks to past sprints.')
                 raise serializers.ValidationError(msg)
-        return attrs
+        return value
 
     def validate(self, attrs): #don't understand at all
         sprint = attrs.get('sprint')
