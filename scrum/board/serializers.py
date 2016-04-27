@@ -84,9 +84,9 @@ class TaskSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError(msg)
         return value
 
-    def validate(self, attrs): #don't understand at all
+    def validate(self, attrs):
         sprint = attrs.get('sprint')
-        status = int(attrs.get('status'))
+        status = attrs.get('status', Task.STATUS_TODO)
         started = attrs.get('started')
         completed = attrs.get('completed')
         if not sprint and status != Task.STATUS_TODO:
